@@ -5,8 +5,9 @@ import '../providers/audio_provider.dart';
 
 class AudioFileList extends StatelessWidget {
   final List<AudioFile> audioFiles;
+  final void Function(AudioFile)? onFileTap;  // Nuevo callback opcional
 
-  const AudioFileList({required this.audioFiles});
+  const AudioFileList({required this.audioFiles, this.onFileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,11 @@ class AudioFileList extends StatelessWidget {
           title: Text(file.title ?? file.path.split('/').last),
           selected: isSelected,
           onTap: () {
-            audioProvider.loadAudioFile(file);
+            if (onFileTap != null) {
+              onFileTap!(file);
+            } else {
+              audioProvider.loadAudioFile(file);
+            }
           },
         );
       },

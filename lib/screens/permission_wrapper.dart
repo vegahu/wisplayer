@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
-import 'main_screen.dart';
-
+import 'file_selection_screen.dart';
 
 class PermissionWrapper extends StatefulWidget {
   @override
@@ -95,7 +94,7 @@ class _PermissionWrapperState extends State<PermissionWrapper> {
   Widget build(BuildContext context) {
     if (_hasPermission) {
       // Permiso concedido, mostrar la pantalla principal
-      return MainScreen();
+      return FileSelectionScreen();
     } else if (_isRequesting) {
       // Mostrar indicador mientras solicita permiso
       return Scaffold(body: Center(child: CircularProgressIndicator()));
