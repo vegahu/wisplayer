@@ -26,6 +26,18 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    final twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    final hours = duration.inHours;
+    if (hours > 0) {
+      return '$hours:$twoDigitMinutes:$twoDigitSeconds';
+    } else {
+      return '$twoDigitMinutes:$twoDigitSeconds';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final audioProvider = context.watch<AudioProvider>();
@@ -53,6 +65,36 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                if (audioProvider.currentAudioFile != null)
+                  StreamBuilder<Duration>(
+                    stream: audioProvider.audioPlayer.positionStream,
+                    builder: (context, snapshot) {
+                      final position = snapshot.data ?? Duration.zero;
+                      final duration = audioProvider.audioPlayer.duration ?? Duration.zero;
+                      return Column(
+                        children: [
+                          Slider(
+                            min: 0,
+                            max: duration.inMilliseconds.toDouble(),
+                            value: position.inMilliseconds.clamp(0, duration.inMilliseconds).toDouble(),
+                            onChanged: (value) {
+                              audioProvider.updatePosition(Duration(milliseconds: value.toInt()));
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(_formatDuration(position)),
+                                Text(_formatDuration(duration)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 PlaybackControls(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
