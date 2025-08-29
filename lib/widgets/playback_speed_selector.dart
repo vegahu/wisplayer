@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/audio_provider.dart';
 
 class PlaybackSpeedSelector extends StatelessWidget {
-  final List<double> speeds = [0.5, 1.0, 1.5, 2.0];
+  final List<double> speeds = [0.8, 0.85, 0.90, 0.95, 1.0, 1.25, 2.0];
 
   @override
   Widget build(BuildContext context) {
